@@ -6,6 +6,14 @@ La caméra SONY EVI-D90P est utilisée pour faire du tracking d'avion. Une ardui
 
 Le manuel de la caméra est dans `python/docs/evid90_manual.pdf`
 
+## Connections de l'arduino à la caméra
+
+- Port 22 <-> RS232 IN, ligne du milieu, à gauche
+- GND <-> RS232 IN, ligne du milieu, au milieu
+- Port 13 <-> RS232 IN, ligne du milieu, à droite
+
+RS232 est un protocole série symétrique (-5V / +5V) inversé (un 1 logique est codé par -5V) alors que les ports séries standards des arduino ne sont pas symétriques (0V / +5V) et pas inversés (un 1 logique est codé par +5V). Coup de bol, pour discuter avec la caméra, on peut utilise le port série virtuel (hardware serial) de l'arduino en utilisant l'option invert_logic. Le soucis du port série virtuel, c'est qu'il utilise des interrupt pour lire la donnée en provenance de la caméra, mais désactive les interrupt quand il écrit à la caméra (pour pas merder le timing si la caméra lui parle en même temps). Du coup, si la caméra et l'arduino se parlent en même temps, les bites envoyés par la caméra seront pas lus (ou mal lu) par l'arduino. Du coup ça force à être assez conservatif dans le code vis-à-vis de la communication avec la caméra. A noter de plus que ça force l'arduino à utiliser un port capable de générer des interrupts pour la lecture des signaux de la caméra.
+
 ## Comment tracker un nouvel avion
 
 - Modifier le fichier blender pour modéliser l'avion qui vous intéresse
@@ -23,3 +31,7 @@ Le manuel de la caméra est dans `python/docs/evid90_manual.pdf`
 - Le système n'est prévu que pour tracker un avion bien spécifique, connu à l'avance (celui dans le dataset)
 
 - Rien n'a encore été testé si il y a deux détections à la fois sur une même frame
+
+- Le PC a besoin d'une alimentation pour faire tourner le GPU, tourner au max de sa puissance et fonctionner plus de 1h. Rien n'a été testé sans alimentation. A voir comment faire pour aller sur le terrain avec ces contraintes. 
+
+- OpenCV est codé avec les pieds et les capacités graphiques de OpenCV ne peuvent pas être utilisés avec matplotlib + PyQt dans la même instalation de python. Du coup, ici, il faut installer opencv-python en mode headless (`pip install opencv-python-headless`).
