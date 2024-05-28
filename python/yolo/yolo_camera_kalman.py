@@ -82,6 +82,8 @@ class PosAxisDriver:
         self.last_update_time = time.time()
 
     def update(self, pos, mes, zoom_fac):
+        if self.last_update_time is None:
+            return
         u = np.array([[0]])
         z = None if mes is None else np.array([[pos + mes * zoom_fac]])
         dt = time.time() - self.last_update_time

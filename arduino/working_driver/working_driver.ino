@@ -2,7 +2,8 @@
 
 // #define DEBUG 1
 
-SoftwareSerial rs232 =  SoftwareSerial(13, 22, true);
+SoftwareSerial rs232 =  SoftwareSerial(2, 3, true);  // arduino uno
+// SoftwareSerial rs232 =  SoftwareSerial(13, 22, true);  // arduino mega
 
 # define MAX_RESP_WAIT_DELAY 10
 # define MAX_RESP_SIZE 16
